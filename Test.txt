@@ -1,0 +1,17 @@
+git clone https://github.com/username/repo-name.git
+cd repo-name
+------------------------
+git pull origin main
+------------------------
+git checkout -b example feature-login
+-------------------------------------
+git add .
+git commit -m "add login feature"
+git push origin feature-login
+------------------------------------
+git pull origin main
+git checkout feature-login
+-----------------------------------
+git add .
+git commit -m "update"
+git push
