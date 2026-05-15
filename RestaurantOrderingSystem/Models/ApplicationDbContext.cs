@@ -5,11 +5,7 @@ namespace RestaurantOrderingSystem.Models
 {
     public class ApplicationDbContext : DbContext
     {
-        // BY Mostafa 
-        // This constructor receives the database configuration (DbContextOptions)
-        // from Program.cs through Dependency Injection. It passes these options
-        // to the base DbContext so Entity Framework can connect to the database
-        // (SQL Server) and manage the tables for our application. 
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
            : base(options)
         {
@@ -56,11 +52,11 @@ namespace RestaurantOrderingSystem.Models
                 .HasForeignKey(oi => oi.MenuItemId);
 
             // Order → Feedback (One-to-One Optional)
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.Feedback)
-                .WithOne(f => f.Order)
-                .HasForeignKey<Feedback>(f => f.OrderId)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Feedback>()
+       .HasOne(f => f.Order)
+       .WithMany(o => o.Feedbacks)
+       .HasForeignKey(f => f.OrderId)
+       .OnDelete(DeleteBehavior.Cascade);
 
             // User → Order
             modelBuilder.Entity<Order>()

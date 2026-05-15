@@ -1,0 +1,100 @@
+﻿@* Views/Orders/Edit.cshtml *@
+@using RestaurantOrderingSystem.Models
+@model RestaurantOrderingSystem.Models.Order
+
+@{
+    ViewData["Title"] = "Edit Order";
+}
+
+<h1>Edit Order #@Model.OrderId</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            {{!-- Hidden fields needed for model binding --}}
+            <input type="hidden" asp-for="OrderId" />
+
+            {{!--
+                UserId and TotalAmount are NOT in the form.
+                The controller loads them from the database directly.
+                This prevents tampering.
+            --}}
+
+            {{!-- OrderDate --}}
+            <div class="form-group mb-3">
+                <label asp-for="OrderDate" class="control-label"></label>
+                <input asp-for="OrderDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
+            </div>
+
+            {{!-- Order Type --}}
+            <div class="form-group mb-3">
+                <label asp-for="OrderType" class="control-label"></label>
+                <select asp-for="OrderType" class="form-control">
+                    <option value="DineIn">Dine In</option>
+                    <option value="Takeaway">Takeaway</option>
+                    <option value="Delivery">Delivery</option>
+                </select>
+                <span asp-validation-for="OrderType" class="text-danger"></span>
+            </div>
+
+            {{!-- Customer Phone --}}
+            <div class="form-group mb-3">
+                <label asp-for="CustomerPhone" class="control-label"></label>
+                <input asp-for="CustomerPhone" class="form-control" />
+                <span asp-validation-for="CustomerPhone" class="text-danger"></span>
+            </div>
+
+            {{!-- Delivery Address --}}
+            <div class="form-group mb-3">
+                <label asp-for="DeliveryAddress" class="control-label"></label>
+                <input asp-for="DeliveryAddress" class="form-control" />
+                <span asp-validation-for="DeliveryAddress" class="text-danger"></span>
+            </div>
+
+            {{!-- Payment Method --}}
+            <div class="form-group mb-3">
+                <label asp-for="PaymentMethod" class="control-label"></label>
+                <select asp-for="PaymentMethod" class="form-control">
+                    <option value="Cash">Cash</option>
+                    <option value="Card">Card</option>
+                    <option value="Online">Online</option>
+                </select>
+                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+            </div>
+
+            {{!-- Admin-only fields --}}
+            @if (Context.Session.GetString("Role") == "Admin")
+            {
+                <div class="form-group mb-3">
+                    <label asp-for="AssignedEmployeeName" class="control-label"></label>
+                    <input asp-for="AssignedEmployeeName" class="form-control" />
+                    <span asp-validation-for="AssignedEmployeeName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Status" class="control-label"></label>
+                    <select asp-for="Status"
+                            class="form-control"
+                            asp-items="Html.GetEnumSelectList<OrderStatus>()">
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+            }
+
+            <div class="form-group mt-4">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary ms-2">Back to Orders</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

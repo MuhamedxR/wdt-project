@@ -1,0 +1,125 @@
+﻿@* Views/OrderItems/Create.cshtml *@
+@model RestaurantOrderingSystem.Models.OrderItem
+
+@{
+    ViewData["Title"] = "Add Items to Order";
+    var order = ViewBag.Order as RestaurantOrderingSystem.Models.Order;
+}
+
+<h1>Add Items to Order #@order?.OrderId</h1>
+<hr />
+
+<div class="row">
+
+    @* {{!-- LEFT: Add Item Form --}} *@
+    <div class="col-md-5">
+        <h4>Add a Menu Item</h4>
+
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            @* {{!-- Hidden: ties the item to the correct order --}} *@
+            <input type="hidden" asp-for="OrderId" value="@order?.OrderId" />
+
+            @* {{!-- Menu Item Dropdown --}} *@
+            <div class="form-group mb-3">
+                <label asp-for="MenuItemId" class="control-label">Menu Item</label>
+                <select asp-for="MenuItemId"
+                        class="form-control"
+                        asp-items="@(ViewData["MenuItemId"] as SelectList)">
+                    <option value="">-- Select Item --</option>
+                </select>
+                <span asp-validation-for="MenuItemId" class="text-danger"></span>
+            </div>
+
+            @* {{!-- Quantity --}} *@
+            <div class="form-group mb-3">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" type="number" min="1" value="1" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+
+            @*   {{!--
+            UnitPrice is NOT shown — set server-side from MenuItem.Price
+            --}} *@
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Add Item" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+
+    @* {{!-- RIGHT: Current Items in this Order --}} *@
+    <div class="col-md-7">
+        <h4>Current Items</h4>
+
+        @if (order?.OrderItems != null && order.OrderItems.Any())
+        {
+            <table class="table table-bordered table-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in order.OrderItems)
+                    {
+                        <tr>
+                            <td>@item.MenuItem?.Name</td>
+                            <td>@item.Quantity</td>
+                            <td>EGP @item.UnitPrice.ToString("0.00")</td>
+                            <td>EGP @((item.Quantity * item.UnitPrice).ToString("0.00"))</td>
+                            <td>
+                                <a asp-controller="OrderItems"
+                                   asp-action="Delete"
+                                   asp-route-id="@item.OrderItemId"
+                                   class="btn btn-sm btn-danger">Remove</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="table-success fw-bold">
+                        <td colspan="3" class="text-end">Total:</td>
+                        <td>EGP @order.TotalAmount.ToString("0.00")</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                No items added yet. Add at least one item from the left.
+            </div>
+        }
+
+        @* {{!-- Done button — goes to Orders/Index when finished --}} *@
+        @if (order?.OrderItems != null && order.OrderItems.Any())
+        {
+            <a asp-controller="Orders"
+               asp-action="Details"
+               asp-route-id="@order?.OrderId"
+               class="btn btn-primary mt-2">
+                ✔ Done — View Order
+            </a>
+        }
+
+        <a asp-controller="Orders"
+           asp-action="Index"
+           class="btn btn-secondary mt-2 ms-2">
+            Back to Orders
+        </a>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

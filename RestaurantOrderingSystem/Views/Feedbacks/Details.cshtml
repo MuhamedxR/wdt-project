@@ -1,0 +1,114 @@
+﻿@model RestaurantOrderingSystem.Models.Feedback
+
+@{
+    ViewData["Title"] = "Feedback Details";
+}
+
+<h1 class="mb-4">Feedback Details</h1>
+
+<div class="card shadow p-4 mb-4">
+
+    <h4>Customer Information</h4>
+
+    <hr />
+
+    <p>
+        <strong>Name:</strong>
+        @Model.Order.User.Name
+    </p>
+
+    <p>
+        <strong>Order ID:</strong>
+        @Model.Order.OrderId
+    </p>
+
+    <p>
+        <strong>Order Type:</strong>
+        @Model.Order.OrderType
+    </p>
+
+    <p>
+        <strong>Payment Method:</strong>
+        @Model.Order.PaymentMethod
+    </p>
+
+</div>
+
+
+<div class="card shadow p-4 mb-4">
+
+    <h4>Ordered Items</h4>
+
+    <table class="table table-bordered">
+
+        <thead class="table-dark">
+
+            <tr>
+                <th>Menu Item</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model.Order.OrderItems)
+            {
+                <tr>
+
+                    <td>
+                        @item.MenuItem.Name
+                    </td>
+
+                    <td>
+                        @item.Quantity
+                    </td>
+
+                    <td>
+                        @item.UnitPrice
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div class="card shadow p-4">
+
+    <h4>Customer Review</h4>
+
+    <hr />
+
+    <p>
+        <strong>Comment:</strong>
+        @Model.Comment
+    </p>
+
+    <p>
+        <strong>Rating:</strong>
+        @Model.Rating / 10
+    </p>
+
+</div>
+
+
+<div class="mt-4">
+
+    <a asp-action="Edit"
+       asp-route-id="@Model.FeedbackId"
+       class="btn btn-warning">
+        Edit
+    </a>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Back To Feedbacks
+    </a>
+
+</div>

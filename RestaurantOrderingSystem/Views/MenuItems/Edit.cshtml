@@ -1,0 +1,446 @@
+﻿@model RestaurantOrderingSystem.Models.MenuItem
+@{
+    ViewData["Title"] = "Edit Meal";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+    :root {
+        --surface: #141414;
+        --panel: #1c1c1e;
+        --card: #242428;
+        --border: #2e2e32;
+        --accent: #e8b86d;
+        --muted: #6b6b75;
+        --success: #3ecf8e;
+        --danger: #ff5c5c;
+        --text: #e8e8ec;
+        --subtext: #9a9aa8;
+    }
+
+    body {
+        background: var(--surface);
+        color: var(--text);
+        font-family: 'DM Sans', sans-serif;
+        min-height: 100vh;
+    }
+
+    .adm-topbar {
+        background: var(--panel);
+        border-bottom: 1px solid var(--border);
+        padding: 1.1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .adm-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.35rem;
+        color: var(--accent);
+    }
+
+        .adm-logo span {
+            color: var(--text);
+            font-size: .85rem;
+            font-family: 'DM Sans', sans-serif;
+            opacity: .45;
+            margin-left: .6rem;
+            font-weight: 300;
+        }
+
+    .edit-shell {
+        padding: 3rem 1.5rem;
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    .adm-crumb {
+        font-size: .78rem;
+        color: var(--muted);
+        margin-bottom: 2rem;
+    }
+
+        .adm-crumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+            .adm-crumb a:hover {
+                text-decoration: underline;
+            }
+
+        .adm-crumb .sep {
+            margin: 0 .5rem;
+            opacity: .4;
+        }
+
+    .form-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 24px 64px rgba(0,0,0,.5);
+    }
+
+    .form-card-header {
+        background: linear-gradient(135deg, #1a1a1e 0%, #222226 100%);
+        border-bottom: 1px solid var(--border);
+        padding: 2rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+    }
+
+        .form-card-header::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(232,184,109,.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+    .header-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: rgba(232,184,109,.14);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+
+    .form-card-header h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.55rem;
+        color: var(--text);
+        margin: 0 0 .25rem;
+    }
+
+    .form-card-header p {
+        color: var(--subtext);
+        font-size: .82rem;
+        margin: 0;
+    }
+
+    .form-card-body {
+        padding: 2.5rem;
+    }
+
+    /* ── ID badge ── */
+    .id-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        background: rgba(99,148,246,.1);
+        border: 1px solid rgba(99,148,246,.2);
+        color: #6394f6;
+        border-radius: 8px;
+        padding: .3rem .75rem;
+        font-size: .75rem;
+        font-weight: 600;
+        margin-bottom: 1.75rem;
+    }
+
+    /* ── Labels & inputs ── */
+    .adm-label {
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: .5rem;
+        display: block;
+    }
+
+    .adm-input, .adm-textarea {
+        background: var(--panel);
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        color: var(--text);
+        font-family: 'DM Sans', sans-serif;
+        font-size: .9rem;
+        padding: .8rem 1.1rem;
+        width: 100%;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+        .adm-input:focus, .adm-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(232,184,109,.12);
+            background: #1e1e22;
+            color: var(--text);
+        }
+
+    .adm-textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+        .adm-input::placeholder, .adm-textarea::placeholder {
+            color: var(--muted);
+        }
+
+    .input-prefix {
+        position: relative;
+    }
+
+    .input-prefix-label {
+        position: absolute;
+        left: 1.1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: .8rem;
+        font-weight: 600;
+        color: var(--success);
+        pointer-events: none;
+    }
+
+    .input-prefix .adm-input {
+        padding-left: 3rem;
+    }
+
+    /* Validation */
+    .field-validation-error {
+        font-size: .78rem;
+        color: var(--danger);
+        margin-top: .35rem;
+        display: block;
+    }
+
+    .validation-summary-errors ul {
+        margin: 0;
+        padding-left: 1.2rem;
+        font-size: .83rem;
+        color: var(--danger);
+    }
+
+    /* ── Changed indicator ── */
+    .adm-input.changed {
+        border-color: rgba(232,184,109,.5);
+    }
+
+    /* ── Buttons ── */
+    .btn-save {
+        background: var(--accent);
+        color: #111;
+        font-size: .9rem;
+        font-weight: 700;
+        padding: .85rem 2.2rem;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        letter-spacing: .3px;
+        transition: opacity .18s, transform .18s;
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+    }
+
+        .btn-save:hover {
+            opacity: .88;
+            transform: translateY(-1px);
+        }
+
+    .btn-cancel {
+        background: transparent;
+        border: 1.5px solid var(--border);
+        color: var(--subtext);
+        font-size: .88rem;
+        font-weight: 500;
+        padding: .82rem 1.8rem;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: border-color .18s, color .18s;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+        .btn-cancel:hover {
+            border-color: #555;
+            color: var(--text);
+        }
+
+    .btn-delete-link {
+        background: transparent;
+        border: none;
+        color: var(--danger);
+        font-size: .82rem;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        opacity: .7;
+        transition: opacity .15s;
+    }
+
+        .btn-delete-link:hover {
+            opacity: 1;
+            color: var(--danger);
+        }
+
+    .form-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 2rem 0;
+    }
+
+    /* ── Category pills ── */
+    .cat-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+        margin-top: .6rem;
+    }
+
+    .cat-pill {
+        font-size: .72rem;
+        font-weight: 600;
+        padding: .3rem .9rem;
+        border: 1.5px solid var(--border);
+        border-radius: 20px;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all .15s;
+        background: transparent;
+    }
+
+        .cat-pill:hover, .cat-pill.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(232,184,109,.08);
+        }
+</style>
+
+<!-- Topbar -->
+<div class="adm-topbar">
+    <div class="adm-logo">&#9670; Saveur <span>Admin Console</span></div>
+</div>
+
+<div class="edit-shell">
+
+    <!-- Breadcrumb -->
+    <div class="adm-crumb">
+        <a asp-action="Index">Menu Management</a>
+        <span class="sep">›</span>
+        Edit Meal
+    </div>
+
+    <div class="form-card">
+        <!-- Header -->
+        <div class="form-card-header">
+            <div class="header-icon">&#9998;</div>
+            <div>
+                <h2>Edit Meal</h2>
+                <p>Update the details for <strong style="color:var(--accent);">@Model.Name</strong></p>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="form-card-body">
+
+            <!-- Item ID badge -->
+            <div class="id-badge">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" /></svg>
+                Item #@Model.MenuItemId
+            </div>
+
+            <form asp-action="Edit" asp-route-id="@Model.MenuItemId" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="MenuItemId" />
+
+                <div asp-validation-summary="ModelOnly" class="mb-3 p-3 rounded-3"
+                     style="background:rgba(255,92,92,.08);border:1px solid rgba(255,92,92,.2);"></div>
+
+                <!-- Name -->
+                <div class="mb-4">
+                    <label asp-for="Name" class="adm-label">Meal Name</label>
+                    <input asp-for="Name" class="adm-input" id="nameInput" placeholder="Meal name…" autocomplete="off" />
+                    <span asp-validation-for="Name" class="field-validation-error"></span>
+                </div>
+
+                <!-- Price -->
+                <div class="mb-4">
+                    <label asp-for="Price" class="adm-label">Price</label>
+                    <div class="input-prefix">
+                        <span class="input-prefix-label">EGP</span>
+                        <input asp-for="Price" class="adm-input" type="number" step="0.01" min="0" />
+                    </div>
+                    <span asp-validation-for="Price" class="field-validation-error"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <label asp-for="Description" class="adm-label">Description</label>
+                    <textarea asp-for="Description" class="adm-textarea"></textarea>
+                    <span asp-validation-for="Description" class="field-validation-error"></span>
+                </div>
+
+                <!-- Category -->
+                <div class="mb-4">
+                    <label asp-for="Category" class="adm-label">Category</label>
+                    <input asp-for="Category" class="adm-input" id="categoryInput" autocomplete="off" />
+                    <div class="cat-pills">
+                        @foreach (var cat in new[] { "Starters", "Mains", "Grills", "Seafood", "Pasta", "Salads", "Desserts", "Beverages" })
+                        {
+                            <button type="button" class="cat-pill @(Model.Category == cat ? "active" : "")"
+                                    onclick="pickCat('@cat')">
+                                @cat
+                            </button>
+                        }
+                    </div>
+                    <span asp-validation-for="Category" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- Actions -->
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <button type="submit" class="btn-save">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+                        Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn-cancel">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+                        Cancel
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.MenuItemId" class="btn-delete-link ms-auto">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" /></svg>
+                        Delete this meal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function pickCat(val) {
+            document.getElementById('categoryInput').value = val;
+            document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        // Highlight changed fields
+        document.querySelectorAll('.adm-input, .adm-textarea').forEach(el => {
+            const orig = el.value;
+            el.addEventListener('input', () => el.classList.toggle('changed', el.value !== orig));
+        });
+    </script>
+}

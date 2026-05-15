@@ -270,7 +270,6 @@ C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantO
 C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantOrderingSystem\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantOrderingSystem\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantOrderingSystem\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantOrderingSystem\obj\Debug\net8.0\swae.build.ex.cache
 C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantOrderingSystem\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantOrderingSystem\obj\Debug\net8.0\Restaura.7E7D678E.Up2Date
 C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantOrderingSystem\obj\Debug\net8.0\RestaurantOrderingSystem.dll
@@ -278,3 +277,4 @@ C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantO
 C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantOrderingSystem\obj\Debug\net8.0\RestaurantOrderingSystem.pdb
 C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantOrderingSystem\obj\Debug\net8.0\RestaurantOrderingSystem.genruntimeconfig.cache
 C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantOrderingSystem\obj\Debug\net8.0\ref\RestaurantOrderingSystem.dll
+C:\Users\Shark\Desktop\2nd term\WDT Project\RestaurantOrderingSystem\RestaurantOrderingSystem\obj\Debug\net8.0\RestaurantOrderingSystem.sourcelink.json

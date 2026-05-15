@@ -1,0 +1,245 @@
+﻿@model IEnumerable<RestaurantOrderingSystem.Models.Feedback>
+
+@{
+    ViewData["Title"] = "Customer Feedbacks";
+
+    var averageRating =
+        Model.Any()
+        ? Model.Average(f => f.Rating)
+        : 0;
+}
+
+<div class="container-fluid mt-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold mb-1">
+
+                Customer Feedbacks
+
+            </h1>
+
+            <p class="text-muted mb-0">
+
+                Monitor customer reviews and restaurant satisfaction
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- STATS -->
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Total Reviews
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        @Model.Count()
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Average Rating
+
+                    </h6>
+
+                    <h2 class="fw-bold text-warning">
+
+                        @averageRating.ToString("0.0") ★
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Excellent Reviews
+
+                    </h6>
+
+                    <h2 class="fw-bold text-success">
+
+                        @Model.Count(f => f.Rating >= 8)
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FEEDBACK TABLE -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+        <div class="card-header bg-dark text-white py-3">
+
+            <h5 class="mb-0">
+
+                Recent Customer Reviews
+
+            </h5>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th class="ps-4">
+
+                            Review
+
+                        </th>
+
+                        <th>
+
+                            Rating
+
+                        </th>
+
+                        <th>
+
+                            Order #
+
+                        </th>
+
+                        <th class="text-center pe-4">
+
+                            Actions
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <!-- COMMENT -->
+                            <td class="ps-4">
+
+                                <div class="fw-semibold">
+
+                                    @item.Comment
+
+                                </div>
+
+                            </td>
+
+                            <!-- RATING -->
+                            <td>
+
+                                @if (item.Rating >= 8)
+                                {
+                                    <span class="badge bg-success px-3 py-2">
+
+                                        @item.Rating ★
+
+                                    </span>
+                                }
+
+                                else if (item.Rating >= 5)
+                                {
+                                    <span class="badge bg-warning text-dark px-3 py-2">
+
+                                        @item.Rating ★
+
+                                    </span>
+                                }
+
+                                else
+                                {
+                                    <span class="badge bg-danger px-3 py-2">
+
+                                        @item.Rating ★
+
+                                    </span>
+                                }
+
+                            </td>
+
+                            <!-- ORDER -->
+                            <td>
+
+                                <span class="fw-semibold">
+
+                                    #@item.Order.OrderId
+
+                                </span>
+
+                            </td>
+
+                            <!-- ACTIONS -->
+                            <td class="text-center pe-4">
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@item.FeedbackId"
+                                   class="btn btn-outline-danger btn-sm px-3">
+
+                                    Delete
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

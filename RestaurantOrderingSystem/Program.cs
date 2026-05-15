@@ -7,7 +7,7 @@ namespace RestaurantOrderingSystem
     public class Program
     {
 
-      
+
         public static void Main(string[] args)
         {
 
@@ -26,6 +26,8 @@ namespace RestaurantOrderingSystem
        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSession();
+            builder.Services.AddHttpContextAccessor(); // <-- ÃÖÝ åÐÇ ÇáÓØÑ åäÇ
 
             var app = builder.Build();
 
@@ -41,8 +43,10 @@ namespace RestaurantOrderingSystem
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            // Enable Session Middleware [For Login]
+            app.UseSession();
             app.UseAuthorization();
+
 
             app.MapControllerRoute(
                 name: "default",

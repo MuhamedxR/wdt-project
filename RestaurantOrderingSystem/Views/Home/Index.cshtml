@@ -1,8 +1,161 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Top Chef - Premium Restaurant";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Hero Section with New Background -->
+<section class="hero position-relative d-flex align-items-center text-center"
+         style="height: 100vh; min-height: 700px;">
+
+    <!-- New Background Image -->
+    <img src="~/images/hero-bg.webp"
+         class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
+         alt="Top Chef Hero"
+         style="filter: brightness(0.65) contrast(1.1); z-index: -1;">
+
+    <div class="container position-relative z-3">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <!-- Logo -->
+                <img src="~/images/logo.png"
+                     alt="Top Chef Logo"
+                     style="height: 130px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));"
+                     class="mb-4">
+
+                <h1 class="display-3 fw-bold text-white mb-4"
+                    style="text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7); letter-spacing: -2px;">
+                    Fresh • Delicious • Fast
+                </h1>
+
+                <p class="lead fs-4 text-light mb-5">
+                    Authentic flavors from our kitchen to your table in minutes
+                </p>
+
+                <div>
+                    <a asp-controller="MenuItems" asp-action="Index"
+                       class="btn btn-success btn-lg px-5 py-3 rounded-pill shadow-lg fs-5 fw-semibold d-inline-flex align-items-center gap-2">
+                        <i class="fa-solid fa-utensils"></i>
+                        Order Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="position-absolute bottom-0 start-50 translate-middle-x pb-5">
+        <i class="fa-solid fa-chevron-down fa-3x text-white animate-bounce"></i>
+    </div>
+</section>
+
+<!-- Featured Meals Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge bg-success px-4 py-2 fs-6 rounded-pill">Signature Dishes</span>
+            <h2 class="display-5 fw-bold mt-3">Our Most Popular Meals</h2>
+            <p class="text-muted fs-5">Handpicked favorites loved by our customers</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Meal 1: Shawarma -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-card overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=800"
+                         class="card-img-top" style="height: 240px; object-fit: cover;" alt="Shawarma">
+                    <div class="card-body d-flex flex-column p-4">
+                        <span class="badge bg-success mb-3">BEST SELLER</span>
+                        <h5 class="fw-bold mb-2">Mixed Shawarma Plate</h5>
+                        <p class="text-muted small flex-grow-1">Tender chicken & beef, garlic sauce, fries & salad</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <h4 class="text-success fw-bold mb-0">EGP 115</h4>
+                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="1"
+                               class="btn btn-success btn-sm px-4">Add</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meal 2: Burger -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-card overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1568908863320-0a3b3d8e6c5e?q=80&w=800"
+                         class="card-img-top" style="height: 240px; object-fit: cover;" alt="Burger">
+                    <div class="card-body d-flex flex-column p-4">
+                        <span class="badge bg-danger mb-3">POPULAR</span>
+                        <h5 class="fw-bold mb-2">Smash Beef Burger</h5>
+                        <p class="text-muted small flex-grow-1">Double beef patty, cheddar cheese, special sauce & onion</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <h4 class="text-success fw-bold mb-0">EGP 135</h4>
+                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="2"
+                               class="btn btn-success btn-sm px-4">Add</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meal 3: Pizza -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-card overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1590947132387-2c5f3c9c3f3d?q=80&w=800"
+                         class="card-img-top" style="height: 240px; object-fit: cover;" alt="Pizza">
+                    <div class="card-body d-flex flex-column p-4">
+                        <span class="badge bg-warning text-dark mb-3">NEW</span>
+                        <h5 class="fw-bold mb-2">Pepperoni Feast Pizza</h5>
+                        <p class="text-muted small flex-grow-1">Spicy pepperoni, mozzarella cheese & Italian herbs</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <h4 class="text-success fw-bold mb-0">EGP 95</h4>
+                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="3"
+                               class="btn btn-success btn-sm px-4">Add</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meal 4: Pasta -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-card overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?q=80&w=800"
+                         class="card-img-top" style="height: 240px; object-fit: cover;" alt="Pasta">
+                    <div class="card-body d-flex flex-column p-4">
+                        <h5 class="fw-bold mb-2">Creamy Chicken Alfredo</h5>
+                        <p class="text-muted small flex-grow-1">Grilled chicken, fettuccine in rich parmesan cream sauce</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <h4 class="text-success fw-bold mb-0">EGP 125</h4>
+                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="4"
+                               class="btn btn-success btn-sm px-4">Add</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .hover-card {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 20px;
+    }
+
+        .hover-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25) !important;
+        }
+
+    .animate-bounce {
+        animation: bounce 2.5s infinite ease-in-out;
+    }
+
+    @@keyframes bounce {
+        0%, 20% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-25px);
+        }
+
+        80%, 100% {
+            transform: translateY(0);
+        }
+    }
+</style>

@@ -1,0 +1,82 @@
+﻿@* Views/Orders/Create.cshtml *@
+@model RestaurantOrderingSystem.Models.Order
+
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h1>Create Order</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            @* {{!-- OrderDate --}} *@
+            <div class="form-group mb-3">
+                <label asp-for="OrderDate" class="control-label"></label>
+                <input asp-for="OrderDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
+            </div>
+
+            @* {{!-- Order Type --}} *@
+            <div class="form-group mb-3">
+                <label asp-for="OrderType" class="control-label"></label>
+                @* {{!-- Use a select for controlled values --}} *@
+                <select asp-for="OrderType" class="form-control">
+                    <option value="">-- Select Order Type --</option>
+                    <option value="DineIn">Dine In</option>
+                    <option value="Takeaway">Takeaway</option>
+                    <option value="Delivery">Delivery</option>
+                </select>
+                <span asp-validation-for="OrderType" class="text-danger"></span>
+            </div>
+
+            @* {{!-- Customer Phone --}} *@
+            <div class="form-group mb-3">
+                <label asp-for="CustomerPhone" class="control-label"></label>
+                <input asp-for="CustomerPhone" class="form-control" />
+                <span asp-validation-for="CustomerPhone" class="text-danger"></span>
+            </div>
+
+            @* {{!-- Delivery Address --}} *@
+            <div class="form-group mb-3">
+                <label asp-for="DeliveryAddress" class="control-label"></label>
+                <input asp-for="DeliveryAddress" class="form-control" />
+                <span asp-validation-for="DeliveryAddress" class="text-danger"></span>
+            </div>
+
+            @* {{!-- Payment Method --}} *@
+            <div class="form-group mb-3">
+                <label asp-for="PaymentMethod" class="control-label"></label>
+                <select asp-for="PaymentMethod" class="form-control">
+                    <option value="">-- Select Payment Method --</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Card">Card</option>
+                    <option value="Online">Online</option>
+                </select>
+                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+            </div>
+
+            @* {{!--
+            UserId, TotalAmount, Status, AssignedEmployeeName
+            are intentionally excluded — set server-side in the controller
+            --}} *@
+
+            <div class="form-group mt-4">
+                <input type="submit" value="Create Order & Add Items"
+                       class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

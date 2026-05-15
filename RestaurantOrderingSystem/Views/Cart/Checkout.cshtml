@@ -1,0 +1,140 @@
+﻿@model RestaurantOrderingSystem.Models.Order
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">
+        Checkout
+    </h1>
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <form asp-action="PlaceOrder" method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+                <div class="mb-3">
+
+                    <label asp-for="OrderType"
+                           class="form-label">
+                    </label>
+
+                    <select asp-for="OrderType"
+                            class="form-control">
+
+                        <option value="">
+                            -- Select Order Type --
+                        </option>
+
+                        <option value="Delivery">
+                            Delivery
+                        </option>
+
+                        <option value="Takeaway">
+                            Takeaway
+                        </option>
+
+                        <option value="DineIn">
+                            Dine In
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="OrderType"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label asp-for="CustomerPhone"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="CustomerPhone"
+                           class="form-control" />
+
+                    <span asp-validation-for="CustomerPhone"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label asp-for="DeliveryAddress"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="DeliveryAddress"
+                           class="form-control" />
+
+                    <span asp-validation-for="DeliveryAddress"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label asp-for="PaymentMethod"
+                           class="form-label">
+                    </label>
+
+                    <select asp-for="PaymentMethod"
+                            class="form-control">
+
+                        <option value="">
+                            -- Select Payment Method --
+                        </option>
+
+                        <option value="Cash">
+                            Cash
+                        </option>
+
+                        <option value="Card">
+                            Card
+                        </option>
+
+                        <option value="Online">
+                            Online
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="PaymentMethod"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <button type="submit"
+                        class="btn btn-success">
+
+                    Place Order
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
+    }
+}
