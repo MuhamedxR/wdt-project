@@ -1,0 +1,305 @@
+﻿@model IEnumerable<RestaurantOrderingSystem.Models.Ingredient>
+
+@{
+    ViewData["Title"] = "Ingredients Management";
+
+    var totalIngredients = Model.Count();
+
+    var lowStock =
+        Model.Count(i => i.QuantityInStock < 50);
+
+    var totalValue =
+        Model.Sum(i => i.QuantityInStock * i.UnitPrice);
+}
+
+<div class="container-fluid mt-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold mb-1">
+
+                Ingredients Management
+
+            </h1>
+
+            <p class="text-muted mb-0">
+
+                Manage restaurant inventory and stock levels
+
+            </p>
+
+        </div>
+
+        <a asp-action="Create"
+           class="btn btn-dark btn-lg px-4 shadow-sm">
+
+            + Add Ingredient
+
+        </a>
+
+    </div>
+
+    <!-- STATS -->
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Total Ingredients
+
+                    </h6>
+
+                    <h2 class="fw-bold">
+
+                        @totalIngredients
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Low Stock Items
+
+                    </h6>
+
+                    <h2 class="fw-bold text-danger">
+
+                        @lowStock
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Inventory Value
+
+                    </h6>
+
+                    <h2 class="fw-bold text-success">
+
+                        EGP @totalValue.ToString("0")
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+        <div class="card-header bg-dark text-white py-3">
+
+            <h5 class="mb-0">
+
+                Restaurant Inventory
+
+            </h5>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th class="ps-4">
+
+                            Ingredient
+
+                        </th>
+
+                        <th>
+
+                            Description
+
+                        </th>
+
+                        <th>
+
+                            Stock
+
+                        </th>
+
+                        <th>
+
+                            Unit
+
+                        </th>
+
+                        <th>
+
+                            Price
+
+                        </th>
+
+                        <th class="text-center pe-4">
+
+                            Actions
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <!-- NAME -->
+                            <td class="ps-4">
+
+                                <div class="fw-semibold">
+
+                                    @item.Name
+
+                                </div>
+
+                            </td>
+
+                            <!-- DESCRIPTION -->
+                            <td>
+
+                                <span class="text-muted">
+
+                                    @item.Description
+
+                                </span>
+
+                            </td>
+
+                            <!-- STOCK -->
+                            <td>
+
+                                @if (item.QuantityInStock < 50)
+                                {
+                                    <span class="badge bg-danger px-3 py-2">
+
+                                        @item.QuantityInStock
+
+                                    </span>
+                                }
+
+                                else if (item.QuantityInStock < 100)
+                                {
+                                    <span class="badge bg-warning text-dark px-3 py-2">
+
+                                        @item.QuantityInStock
+
+                                    </span>
+                                }
+
+                                else
+                                {
+                                    <span class="badge bg-success px-3 py-2">
+
+                                        @item.QuantityInStock
+
+                                    </span>
+                                }
+
+                            </td>
+
+                            <!-- UNIT -->
+                            <td>
+
+                                @item.Unit
+
+                            </td>
+
+                            <!-- PRICE -->
+                            <td>
+
+                                <span class="fw-bold text-success">
+
+                                    EGP @item.UnitPrice
+
+                                </span>
+
+                            </td>
+
+                            <!-- ACTIONS -->
+                            <td class="text-center pe-4">
+
+                                <div class="d-flex gap-2 justify-content-center">
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.IngredientId"
+                                       class="btn btn-dark btn-sm px-3">
+
+                                        Edit
+
+                                    </a>
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.IngredientId"
+                                       class="btn btn-outline-primary btn-sm px-3">
+
+                                        Details
+
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.IngredientId"
+                                       class="btn btn-outline-danger btn-sm px-3">
+
+                                        Delete
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

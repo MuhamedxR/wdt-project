@@ -1,0 +1,917 @@
+﻿@model RestaurantOrderingSystem.Models.PaginatedList<RestaurantOrderingSystem.Models.Order>
+@using RestaurantOrderingSystem.Models
+@{
+    ViewData["Title"] = "My Orders";
+
+    var role =
+        Context.Session.GetString("Role");
+
+    var orders = ViewBag.ShowAll == true ? Model : Model.Take(5);
+}
+@if (role == "Admin")
+{
+
+    <div class="container mt-4">
+
+        <!-- PAGE HEADER -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h1 class="fw-bold mb-1">
+
+                    Orders Management
+
+                </h1>
+
+                <p class="text-muted mb-0">
+
+                    Manage customer orders and track statuses
+
+                </p>
+            </div>
+
+        </div>
+
+        <!-- STATISTICS -->
+        <div class="row mb-4">
+
+            <div class="col-md-3 mb-3">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <h6 class="text-muted">
+
+                            Total Orders
+
+                        </h6>
+
+                        <h2 class="fw-bold">
+
+                            @Model.Count()
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <h6 class="text-muted">
+
+                            Pending
+
+                        </h6>
+
+                        <h2 class="fw-bold text-warning">
+
+                            @Model.Count(o => o.Status == OrderStatus.Pending)
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <h6 class="text-muted">
+
+                            Delivered
+
+                        </h6>
+
+                        <h2 class="fw-bold text-success">
+
+                            @Model.Count(o => o.Status == OrderStatus.Delivered)
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body">
+
+                        <h6 class="text-muted">
+
+                            Revenue
+
+                        </h6>
+
+                        <h2 class="fw-bold text-primary">
+
+                            EGP @Model.Sum(o => o.TotalAmount)
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- STATUS FILTERS -->
+
+        <div class="d-flex gap-2 flex-wrap mb-4">
+
+            <a asp-action="Index"
+               class="btn rounded-pill px-4 py-2 fw-semibold shadow-sm
+                                           @(ViewBag.CurrentStatus == null
+                                                                                                                                                  ? "btn-dark"
+                                                                                                                                                  : "btn-outline-dark")">
+
+                All
+
+            </a>
+
+            <a asp-action="Index"
+               asp-route-status="Pending"
+               class="btn rounded-pill px-4 py-2 fw-semibold shadow-sm
+                                           @(ViewBag.CurrentStatus == "Pending"
+                                                                                                                                                  ? "btn-warning text-dark"
+                                                                                                                                                  : "btn-outline-warning")">
+
+                Pending
+
+            </a>
+
+            <a asp-action="Index"
+               asp-route-status="Preparing"
+               class="btn rounded-pill px-4 py-2 fw-semibold shadow-sm
+                                           @(ViewBag.CurrentStatus == "Preparing"
+                                                                                                                                                  ? "btn-info text-white"
+                                                                                                                                                  : "btn-outline-info")">
+
+                Preparing
+
+            </a>
+
+            <a asp-action="Index"
+               asp-route-status="Delivered"
+               class="btn rounded-pill px-4 py-2 fw-semibold shadow-sm
+                                           @(ViewBag.CurrentStatus == "Delivered"
+                                                                                                                                                  ? "btn-success"
+                                                                                                                                                  : "btn-outline-success")">
+
+                Delivered
+
+            </a>
+
+            <a asp-action="Index"
+               asp-route-status="Cancelled"
+               class="btn rounded-pill px-4 py-2 fw-semibold shadow-sm
+                                           @(ViewBag.CurrentStatus == "Cancelled"
+                                                                                                                                                  ? "btn-danger"
+                                                                                                                                                  : "btn-outline-danger")">
+
+            Cancelled
+
+            </a>
+
+
+        </div>
+        <!-- SORT -->
+
+        <div class="d-flex justify-content-end mb-4">
+
+            <select id="sortSelect"
+                    class="form-select w-auto shadow-sm">
+
+                <option value="newest"
+                        selected="@(ViewBag.CurrentSort == "newest")">
+
+                    Newest First
+
+                </option>
+
+                <option value="oldest"
+                        selected="@(ViewBag.CurrentSort == "oldest")">
+
+                    Oldest First
+
+                </option>
+
+                <option value="high"
+                        selected="@(ViewBag.CurrentSort == "high")">
+
+                    Highest Price
+
+                </option>
+
+                <option value="low"
+                        selected="@(ViewBag.CurrentSort == "low")">
+
+                    Lowest Price
+
+                </option>
+
+            </select>
+
+        </div>
+        <!-- TABLE -->
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body">
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle">
+
+                        <thead class="table-dark">
+
+                            <tr>
+
+                                <th>Order #</th>
+
+                                <th>Customer</th>
+
+                                <th>Phone</th>
+
+                                <th>Total</th>
+
+                                <th>Items</th>
+
+                                <th>Payment</th>
+
+                                <th>Status</th>
+
+                                <th>Date</th>
+
+                                <th class="text-center" width="140">
+
+                                    Actions
+
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td class="fw-bold">
+
+                                        #@item.OrderId
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.User?.Name
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.CustomerPhone
+
+                                    </td>
+
+                                    <td class="fw-bold text-success">
+
+                                        EGP @item.TotalAmount
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.OrderItems.Count Items
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.PaymentMethod
+
+                                    </td>
+
+                                    <td>
+
+                                        @if (item.Status == OrderStatus.Pending)
+                                        {
+                                            <span class="badge bg-warning text-dark">
+
+                                                Pending
+
+                                            </span>
+                                        }
+
+                                        else if (item.Status == OrderStatus.Preparing)
+                                        {
+                                            <span class="badge bg-info text-dark">
+
+                                                Preparing
+
+                                            </span>
+                                        }
+
+                                        else if (item.Status == OrderStatus.Delivered)
+                                        {
+                                            <span class="badge bg-success">
+
+                                                Delivered
+
+                                            </span>
+                                        }
+
+                                        else
+                                        {
+                                            <span class="badge bg-danger">
+
+                                                Cancelled
+
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.OrderDate.ToShortDateString()
+
+                                    </td>
+
+                                    <td class="text-center">
+
+                                        <div class="d-flex justify-content-center">
+
+                                            <a asp-action="Edit"
+                                               asp-route-id="@item.OrderId"
+                                               class="btn btn-primary btn-sm px-3">
+
+                                                Manage
+
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+else
+{
+    <div class="container mt-4">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show mb-4 d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    @TempData["Success"]
+
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+
+                    @if (TempData["ShowCartButton"] != null)
+                    {
+                        <a asp-controller="Cart"
+                           asp-action="Index"
+                           class="btn btn-dark btn-sm">
+
+                            Go To Cart
+
+                        </a>
+                    }
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert">
+                    </button>
+
+                </div>
+
+            </div>
+        }
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h1 class="fw-bold mb-1">
+
+                    My Orders
+
+                </h1>
+
+                <p class="text-muted mb-0">
+
+                    Track your orders and manage your feedback
+
+                </p>
+
+            </div>
+            <!-- FILTERS -->
+
+            <div class="d-flex gap-2 flex-wrap mb-4 mt-4">
+
+                <a asp-action="Index"
+                   class="btn @(ViewBag.CurrentStatus == null ? "btn-dark" : "btn-outline-dark")">
+
+                    All
+
+                </a>
+
+                <a asp-action="Index"
+                   asp-route-status="Pending"
+                   class="btn @(ViewBag.CurrentStatus == "Pending" ? "btn-warning text-dark" : "btn-outline-warning")">
+
+                    Pending
+
+                </a>
+
+                <a asp-action="Index"
+                   asp-route-status="Preparing"
+                   class="btn @(ViewBag.CurrentStatus == "Preparing" ? "btn-info text-white" : "btn-outline-info")">
+
+                    Preparing
+
+                </a>
+
+                <a asp-action="Index"
+                   asp-route-status="Delivered"
+                   class="btn @(ViewBag.CurrentStatus == "Delivered" ? "btn-success" : "btn-outline-success")">
+
+                    Delivered
+
+                </a>
+
+                <a asp-action="Index"
+                   asp-route-status="Cancelled"
+                   class="btn @(ViewBag.CurrentStatus == "Cancelled" ? "btn-danger" : "btn-outline-danger")">
+
+                    Cancelled
+
+                </a>
+
+            </div>
+            <a asp-controller="MenuItems"
+               asp-action="Index"
+               class="btn btn-dark px-4">
+
+                Order More
+
+            </a>
+
+        </div>
+        <!-- SORT -->
+
+        <div class="d-flex justify-content-end mb-4">
+
+            <select id="sortSelect"
+                    class="form-select w-auto shadow-sm">
+
+                <option value="newest"
+                        selected="@(ViewBag.CurrentSort == "newest")">
+
+                    Newest First
+
+                </option>
+
+                <option value="oldest"
+                        selected="@(ViewBag.CurrentSort == "oldest")">
+
+                    Oldest First
+
+                </option>
+
+                <option value="high"
+                        selected="@(ViewBag.CurrentSort == "high")">
+
+                    Highest Price
+
+                </option>
+
+                <option value="low"
+                        selected="@(ViewBag.CurrentSort == "low")">
+
+                    Lowest Price
+
+                </option>
+
+            </select>
+
+        </div>
+        @if (!Model.Any())
+        {
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body text-center p-5">
+
+                    <h3 class="fw-bold mb-3">
+
+                        No Orders Yet
+
+                    </h3>
+
+                    <p class="text-muted mb-4">
+
+                        Start ordering your favorite meals now
+
+                    </p>
+
+                    <a asp-controller="MenuItems"
+                       asp-action="Index"
+                       class="btn btn-success px-4">
+
+                        Browse Menu
+
+                    </a>
+
+                </div>
+
+            </div>
+        }
+
+        else
+        {
+            <div class="row">
+
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-6 mb-4">
+
+                        <div class="card border-0 shadow-sm h-100 rounded-4">
+
+                            <div class="card-body p-4">
+
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+
+                                    <div>
+
+                                        <h4 class="fw-bold mb-1">
+
+                                            Order #@item.OrderId
+
+                                        </h4>
+
+                                        <small class="text-muted">
+
+                                            @item.OrderDate.ToString("dd MMM yyyy - hh:mm tt")
+
+                                        </small>
+
+                                    </div>
+
+                                    @if (item.Status == OrderStatus.Pending)
+                                    {
+                                        <span class="badge bg-warning text-dark px-3 py-2">
+
+                                            Pending
+
+                                        </span>
+                                    }
+
+                                    else if (item.Status == OrderStatus.Preparing)
+                                    {
+                                        <span class="badge bg-info text-dark px-3 py-2">
+
+                                            Preparing
+
+                                        </span>
+                                    }
+
+                                    else if (item.Status == OrderStatus.Delivered)
+                                    {
+                                        <span class="badge bg-success px-3 py-2">
+
+                                            Delivered
+
+                                        </span>
+                                    }
+
+                                    else if (item.Status == OrderStatus.Cancelled)
+                                    {
+                                        <span class="badge bg-danger px-3 py-2">
+
+                                            Cancelled
+
+                                        </span>
+                                    }
+
+                            </div>
+
+                            <hr />
+
+                            <div class="mb-2">
+
+                                <strong>
+
+                                    Order Type:
+
+                                </strong>
+
+                                @item.OrderType
+
+                            </div>
+
+                            <div class="mb-2">
+
+                                <strong>
+
+                                    Payment Method:
+
+                                </strong>
+
+                                @item.PaymentMethod
+
+                            </div>
+
+                            <div class="mb-2">
+
+                                <strong>
+
+                                    Phone:
+
+                                </strong>
+
+                                @item.CustomerPhone
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <strong>
+
+                                    Address:
+
+                                </strong>
+
+                                @(string.IsNullOrEmpty(item.DeliveryAddress)
+                                                        ? "Not Provided"
+                                                        : item.DeliveryAddress)
+
+                    </div>
+
+                    @if (Context.Session.GetString("Role") == "Admin")
+                                {
+                                    <div class="mb-3">
+
+                                        <strong>
+
+                                            Customer:
+
+                                        </strong>
+
+                                        @item.User?.Name
+
+                                    </div>
+                                }
+
+                                <div class="mb-4">
+
+                                    <h3 class="text-success fw-bold mb-0">
+
+                                        EGP @item.TotalAmount.ToString("0.00")
+
+                                    </h3>
+
+                                </div>
+
+                                <div class="d-flex flex-wrap gap-2">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.OrderId"
+                                       class="btn btn-outline-dark btn-sm px-3">
+
+                                        Details
+
+                                    </a>
+
+                                    @if (item.Status == OrderStatus.Delivered)
+                                    {
+                                        <a asp-controller="Cart"
+                                           asp-action="ReOrder"
+                                           asp-route-id="@item.OrderId"
+                                           class="btn btn-dark btn-sm px-3">
+
+                                            Order Again
+
+                                        </a>
+                                    }
+
+                                    @if (item.Status == OrderStatus.Pending)
+                                    {
+                                        <a asp-action="Cancel"
+                                           asp-route-id="@item.OrderId"
+                                           class="btn btn-outline-danger btn-sm px-3">
+
+                                            Cancel Order
+
+                                        </a>
+                                    }
+
+                                    @if (item.Status == OrderStatus.Delivered)
+                                    {
+                                        if (item.Feedbacks == null
+                                        || item.Feedbacks.Count < 2)
+                                        {
+                                            <a asp-controller="Feedbacks"
+                                               asp-action="Create"
+                                               asp-route-orderId="@item.OrderId"
+                                               class="btn btn-success btn-sm px-3">
+
+                                                Add Feedback
+
+                                            </a>
+                                        }
+
+                                        else
+                                        {
+                                            <button class="btn btn-danger btn-sm px-3"
+                                                    disabled>
+
+                                                Feedback Limit Reached
+
+                                            </button>
+                                        }
+                                    }
+
+                                    @if (Context.Session.GetString("Role") == "Admin")
+                                    {
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.OrderId"
+                                           class="btn btn-primary btn-sm px-3">
+
+                                            Manage Order
+
+                                        </a>
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+            @if (Context.Session.GetString("Role") != "Admin"
+                && ViewBag.HasMoreOrders == true)
+            {
+                <div class="text-center mt-2 mb-5">
+
+                    @if (ViewBag.ShowAll == true)
+                    {
+                        <a asp-action="Index"
+                           class="btn btn-outline-secondary btn-lg rounded-pill px-5">
+
+                            Show Less
+
+                        </a>
+                    }
+
+                    else
+                    {
+                        <a asp-action="Index"
+                           asp-route-showAll="true"
+                           class="btn btn-dark btn-lg rounded-pill px-5">
+
+                            Show More Orders
+
+                        </a>
+                    }
+
+                </div>
+            }
+        }
+        @{
+            var prevDisabled =
+            !Model.HasPreviousPage
+            ? "disabled"
+            : "";
+
+            var nextDisabled =
+            !Model.HasNextPage
+            ? "disabled"
+            : "";
+        }
+
+        <div class="d-flex justify-content-center mt-4">
+
+            <nav>
+
+                <ul class="pagination shadow-sm">
+
+                    <!-- PREVIOUS -->
+
+                    <li class="page-item @prevDisabled">
+
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pageNumber="@(Model.PageIndex - 1)"
+                           asp-route-status="@ViewBag.CurrentStatus"
+                           asp-route-sort="@ViewBag.CurrentSort">
+
+                            Previous
+
+                        </a>
+
+                    </li>
+
+                    <!-- PAGE NUMBERS -->
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-pageNumber="@i"
+                               asp-route-status="@ViewBag.CurrentStatus"
+                               asp-route-sort="@ViewBag.CurrentSort">
+
+                                @i
+
+                            </a>
+
+                        </li>
+                    }
+
+                    <!-- NEXT -->
+
+                    <li class="page-item @nextDisabled">
+
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pageNumber="@(Model.PageIndex + 1)"
+                           asp-route-status="@ViewBag.CurrentStatus"
+                           asp-route-sort="@ViewBag.CurrentSort">
+
+                            Next
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </div>
+    </div>
+    <script>
+
+        const sortSelect =
+            document.getElementById("sortSelect");
+
+        if (sortSelect)
+        {
+            sortSelect.addEventListener("change", function () {
+
+                const url =
+                    new URL(window.location.href);
+
+                url.searchParams.set(
+                    "sort",
+                    this.value);
+
+                window.location.href =
+                    url.toString();
+
+            });
+        }
+
+    </script>
+}

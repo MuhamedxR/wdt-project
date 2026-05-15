@@ -1,0 +1,56 @@
+:root {
+    --primary: #111827;
+    --accent: #16a34a;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.hero {
+    background-size: cover;
+    background-position: center;
+}
+
+.hover-card {
+    transition: all 0.3s ease;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+    .hover-card:hover {
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+        transform: translateY(-8px);
+    }
+
+.btn {
+    transition: all 0.3s ease;
+}
+
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+
+.animate-bounce {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+
+    80%, 100% {
+        transform: translateY(0);
+    }
+}
+
+/* Cart badge */
+#cartCount {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+}
